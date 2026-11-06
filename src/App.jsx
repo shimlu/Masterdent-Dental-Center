@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone, Calendar, Mail, MapPin, Clock, ArrowRight, Heart } from 'lucide-react';
+import { Menu, X, Phone, Mail, MapPin, Clock, Heart } from 'lucide-react';
 import Home from './components/Home';
 import Services from './components/Services';
 import Contact from './components/Contact';

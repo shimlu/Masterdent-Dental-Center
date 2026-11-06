@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, ShieldCheck, Activity, Award, ArrowRight, Phone, Calendar, Heart, Shield, CheckCircle } from 'lucide-react';
+import OfficeLocationPanel from './OfficeLocationPanel';
 
 export default function Home({ setPage }) {
   // Insurance partners list
@@ -329,6 +330,11 @@ export default function Home({ setPage }) {
                 Book Online
               </button>
             </div>
+          </div>
+
+          {/* Location & Google Map Showcase Panel */}
+          <div className="mt-16">
+            <OfficeLocationPanel />
           </div>
         </div>
       </section>

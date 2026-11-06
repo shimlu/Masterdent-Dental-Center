@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Shield, Sparkles, Activity, PlusSquare,
-  Smile, Heart, Calendar, Phone, CheckCircle, ShieldCheck
+  Smile, Phone, CheckCircle, ShieldCheck
 } from 'lucide-react';
 
 export default function Services({ setPage }) {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
   Phone, Mail, MapPin, Clock, ShieldCheck,
-  CheckCircle2, AlertCircle, Info, Sparkles, Navigation
+  CheckCircle2, AlertCircle, Info, Navigation, Car
 } from 'lucide-react';
+import OfficeLocationPanel from './OfficeLocationPanel';
 
 export default function Contact() {
   // Form State
@@ -65,8 +66,11 @@ export default function Contact() {
       newErrors.email = "Email address cannot exceed 80 characters.";
     }
 
+    const todayStr = new Date().toISOString().split('T')[0];
     if (!formData.date) {
       newErrors.date = "Please select a preferred date.";
+    } else if (formData.date < todayStr) {
+      newErrors.date = "Preferred date cannot be in the past.";
     }
 
     if (!formData.time) {
@@ -97,7 +101,7 @@ export default function Contact() {
       setBookingId(refId);
 
       // Fetch the Google Sheets Web App deployment URL from environments
-      const webAppUrl = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL || "";
+      const webAppUrl = (import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL || "").trim();
 
       if (webAppUrl) {
         try {
@@ -295,6 +299,7 @@ export default function Contact() {
                       type="date"
                       id="date"
                       name="date"
+                      min={new Date().toISOString().split('T')[0]}
                       value={formData.date}
                       onChange={handleChange}
                       className={`w-full bg-slate-50 border ${errors.date ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
@@ -432,7 +437,7 @@ export default function Contact() {
                   href="https://maps.google.com/?q=Meridian+Dental+Center+45+Pearl+Street+Meridian+City"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-850 transition-colors group"
+                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800 transition-colors group"
                 >
                   <MapPin className="w-5 h-5 text-brand-accent shrink-0 mt-0.5" />
                   <div>
@@ -447,7 +452,7 @@ export default function Contact() {
                 {/* Click-to-Call Link */}
                 <a 
                   href="tel:+639171234567" 
-                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-850 transition-colors group"
+                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800 transition-colors group"
                 >
                   <Phone className="w-5 h-5 text-brand-accent shrink-0 mt-0.5" />
                   <div>
@@ -461,7 +466,7 @@ export default function Contact() {
                 {/* Click-to-Email Link */}
                 <a 
                   href="mailto:shimrilu@gmail.com" 
-                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-850 transition-colors group"
+                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800 transition-colors group"
                 >
                   <Mail className="w-5 h-5 text-brand-accent shrink-0 mt-0.5" />
                   <div>
@@ -508,47 +513,53 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Google Map Mock Preview */}
-            <div className="bg-white rounded-3xl p-6 border border-brand-silver shadow-sm overflow-hidden space-y-4">
+            {/* Arrival & Parking Details Card */}
+            <div className="bg-white rounded-3xl p-6 border border-brand-silver shadow-sm space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Navigation className="w-4.5 h-4.5 text-brand-accent" />
-                  <h4 className="text-sm font-bold text-brand-dark">Directions & Parking</h4>
+                  <Car className="w-5 h-5 text-brand-accent" />
+                  <h4 className="text-sm font-bold text-brand-dark">Arrival & Parking</h4>
                 </div>
-                <span className="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-1 rounded">
-                  Free Lot Parking
+                <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-full border border-emerald-200">
+                  Free Reserved Parking
                 </span>
               </div>
 
-              {/* Elegant CSS Google Map Mockup */}
-              <div className="relative h-44 bg-slate-100 border border-brand-silver rounded-2xl overflow-hidden flex items-center justify-center">
-                {/* Abstract grid lines mimicking map */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] bg-[size:1.5rem_1.5rem] opacity-25" />
-                {/* Mapped roads */}
-                <div className="absolute top-1/2 left-0 right-0 h-4 bg-slate-300/60 transform -translate-y-1/2" />
-                <div className="absolute left-1/3 top-0 bottom-0 w-4 bg-slate-300/60" />
-                {/* Dental Pin Indicator */}
-                <div className="relative z-10 text-center animate-pulse-subtle">
-                  <div className="w-10 h-10 rounded-full bg-brand-accent/20 border-2 border-brand-accent flex items-center justify-center mx-auto shadow-md">
-                    <MapPin className="w-5 h-5 text-brand-accent fill-brand-accent" />
-                  </div>
-                  <span className="text-[10px] font-bold text-brand-dark bg-white shadow border border-brand-silver px-2 py-0.5 rounded-full mt-2 inline-block">
-                    Yeshu Dental
-                  </span>
-                </div>
-              </div>
-
-              <div className="text-xs text-slate-500 flex items-start gap-2 pt-1">
-                <Info className="w-4 h-4 text-brand-slate shrink-0 mt-0.5" />
-                <p className="leading-relaxed">
-                  Located in the pearl business district. Enter from Pearl Street; free underground parking is reserved for all clinical visitors in Slots 12 to 20.
+              <div className="text-xs text-slate-500 space-y-2 leading-relaxed">
+                <p>
+                  Reserved patient parking is located right in front of the clinic. Underground parking is available in <strong>Slots 12 to 20</strong>.
+                </p>
+                <p>
+                  Ground floor accessibility with full wheelchair ramps and step-free clinic access.
                 </p>
               </div>
+
+              <a
+                href="#office-map"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-accent hover:text-brand-accentHover pt-1"
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                View Interactive Map Below &darr;
+              </a>
             </div>
 
           </div>
 
         </div>
+
+        {/* Full-Width Interactive Google Map & Office Details Showcase (Matching Reference Panel) */}
+        <div id="office-map" className="mt-16 pt-4">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark">
+              Visit Our Clinic
+            </h2>
+            <p className="text-slate-500 text-sm mt-1">
+              Conveniently located with easy highway access and reserved patient parking.
+            </p>
+          </div>
+          <OfficeLocationPanel />
+        </div>
+
       </div>
     </div>
   );
