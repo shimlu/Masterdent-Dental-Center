@@ -127,105 +127,113 @@ export default function OfficeLocationPanel() {
         {/* Right Column: Interactive Google Map with Place Card & Landmark Guide Toggle */}
         <div className="lg:col-span-7 relative min-h-[460px] lg:min-h-full bg-slate-900 overflow-hidden flex flex-col">
 
-          {/* Map View Switcher (Top Right) */}
-          <div className="absolute top-4 right-4 z-20 flex bg-slate-950/90 backdrop-blur-md p-1 rounded-xl border border-slate-700/80 shadow-lg">
-            <button
-              type="button"
-              onClick={() => setMapMode('google')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1.5 ${mapMode === 'google' ? 'bg-brand-gold text-brand-dark' : 'text-slate-300 hover:text-white'}`}
-            >
-              <MapPin className="w-3.5 h-3.5" />
-              Live Map
-            </button>
-            <button
-              type="button"
-              onClick={() => setMapMode('landmark')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1.5 ${mapMode === 'landmark' ? 'bg-brand-gold text-brand-dark' : 'text-slate-300 hover:text-white'}`}
-            >
-              <MapIcon className="w-3.5 h-3.5" />
-              Landmark Guide
-            </button>
+          {/* Map View Switcher Bar (Always Visible on Mobile & Desktop) */}
+          <div className="bg-slate-950 border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-2 z-20">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Clinic Map View
+            </span>
+            <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-700/80 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setMapMode('google')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1.5 ${mapMode === 'google' ? 'bg-brand-gold text-brand-dark' : 'text-slate-300 hover:text-white'}`}
+              >
+                <MapPin className="w-3.5 h-3.5" />
+                Live Map
+              </button>
+              <button
+                type="button"
+                onClick={() => setMapMode('landmark')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1.5 ${mapMode === 'landmark' ? 'bg-brand-gold text-brand-dark' : 'text-slate-300 hover:text-white'}`}
+              >
+                <MapIcon className="w-3.5 h-3.5" />
+                Landmark Guide
+              </button>
+            </div>
           </div>
 
-          {/* Floating Google Maps Place Card Overlay */}
-          {mapMode === 'google' && (
-            <div className="absolute top-4 left-4 z-20 bg-white text-slate-900 rounded-xl p-3.5 sm:p-4 shadow-2xl border border-slate-200 max-w-[260px] sm:max-w-[305px] animate-fade-in">
-              <div className="space-y-2">
-                <div>
-                  <h3 className="font-bold text-sm sm:text-base text-slate-900 leading-tight">
-                    Masterdent Dental Center
-                  </h3>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">
-                    CBD 2 Health & Wellness Strip, Joker Arroyo St., Brgy. Triangulo, Naga City, 4400
-                  </p>
-                </div>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1 text-xs">
-                  <span className="font-bold text-slate-800">4.7</span>
-                  <div className="flex text-amber-500">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                    ))}
+          {/* Map Viewport Container */}
+          <div className="relative flex-grow flex flex-col">
+            {/* Google Maps Place Card (Docked neatly on Mobile, Floating Overlay on Desktop) */}
+            {mapMode === 'google' && (
+              <div className="bg-white text-slate-900 p-4 border-b border-slate-200 sm:border sm:rounded-xl sm:shadow-2xl sm:absolute sm:top-4 sm:left-4 sm:z-20 sm:max-w-[300px] animate-fade-in">
+                <div className="space-y-2">
+                  <div>
+                    <h3 className="font-bold text-sm sm:text-base text-slate-900 leading-tight">
+                      Masterdent Dental Center
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">
+                      CBD 2 Health & Wellness Strip, Joker Arroyo St., Brgy. Triangulo, Naga City, 4400
+                    </p>
                   </div>
-                  <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline font-medium text-xs ml-1"
-                  >
-                    Naga City
-                  </a>
-                </div>
 
-                {/* Action Buttons */}
-                <div className="pt-1.5 flex items-center gap-2">
-                  <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 bg-brand-dark hover:bg-slate-800 text-brand-gold text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-sm transition-colors"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    Open in Maps
-                  </a>
-                  <a
-                    href={googleDirectionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-50 hover:bg-amber-100 text-brand-accent transition-colors shadow-sm border border-amber-200"
-                    title="Get Directions"
-                  >
-                    <Navigation className="w-4 h-4" />
-                  </a>
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 text-xs">
+                    <span className="font-bold text-slate-800">4.7</span>
+                    <div className="flex text-amber-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                      ))}
+                    </div>
+                    <a
+                      href={googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline font-medium text-xs ml-1"
+                    >
+                      Naga City
+                    </a>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="pt-1 flex items-center gap-2">
+                    <a
+                      href={googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 bg-brand-dark hover:bg-slate-800 text-brand-gold text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-sm transition-colors"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      Open in Maps
+                    </a>
+                    <a
+                      href={googleDirectionsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-50 hover:bg-amber-100 text-brand-accent transition-colors shadow-sm border border-amber-200"
+                      title="Get Directions"
+                    >
+                      <Navigation className="w-4 h-4" />
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Map Content Area */}
-          {mapMode === 'google' ? (
-            <iframe
-              title="Masterdent Dental Center Naga City Map"
-              src="https://maps.google.com/maps?q=13.6213128,123.1949730+(Masterdent+Dental+Center)&t=&z=17&ie=UTF8&iwloc=B&output=embed"
-              className="w-full h-full min-h-[460px] lg:min-h-full border-0 filter contrast-[1.02]"
-              loading="lazy"
-              allowFullScreen
-            ></iframe>
-          ) : (
-            <div className="w-full h-full min-h-[460px] bg-slate-100 flex flex-col items-center justify-center p-4 sm:p-8 pt-16">
-              <div className="rounded-2xl overflow-hidden shadow-xl border border-slate-300 bg-white max-w-2xl w-full">
-                <img
-                  src="/masterdent-landmark-map.jpg"
-                  alt="Masterdent Dental Center Landmark Guide near SM City Naga and BCDC"
-                  className="w-full h-auto object-contain"
-                />
+            {/* Map Content Area */}
+            {mapMode === 'google' ? (
+              <iframe
+                title="Masterdent Dental Center Naga City Map"
+                src="https://maps.google.com/maps?q=13.6213128,123.1949730+(Masterdent+Dental+Center)&t=&z=17&ie=UTF8&iwloc=B&output=embed"
+                className="w-full h-[360px] sm:h-full sm:min-h-[440px] lg:min-h-full border-0 filter contrast-[1.02]"
+                loading="lazy"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <div className="w-full h-full min-h-[380px] sm:min-h-[440px] bg-slate-100 flex flex-col items-center justify-center p-4 sm:p-8">
+                <div className="rounded-2xl overflow-hidden shadow-xl border border-slate-300 bg-white max-w-2xl w-full">
+                  <img
+                    src="/masterdent-landmark-map.jpg"
+                    alt="Masterdent Dental Center Landmark Guide near SM City Naga and BCDC"
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
+                <p className="text-xs text-slate-600 font-semibold mt-3 text-center">
+                  Located along Joker Arroyo St. (former C. Anciano St.), directly in front of BCDC & near SM City Naga.
+                </p>
               </div>
-              <p className="text-xs text-slate-600 font-semibold mt-3 text-center">
-                Located along Joker Arroyo St. (former C. Anciano St.), directly in front of BCDC & near SM City Naga.
-              </p>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Bottom Map Bar */}
           <div className="bg-slate-950/95 border-t border-slate-800 px-4 py-2.5 text-xs text-slate-400 flex flex-wrap justify-between items-center gap-2 z-10">
