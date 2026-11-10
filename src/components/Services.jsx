@@ -13,14 +13,20 @@ export default function Services({ setPage }) {
       items: [
         {
           name: "Dental Checkups & Consultations",
+          image: "/services/checkup.jpg",
+          tag: "General Dentistry",
           desc: "Thorough oral examinations with honest, transparent treatment plans explained clearly before any procedure begins."
         },
         {
           name: "Oral Prophylaxis (Dental Cleaning)",
+          image: "/services/cleaning.jpg",
+          tag: "Preventive Care",
           desc: "Gentle plaque, stain, and tartar removal combined with polishing to protect your gums and keep your smile fresh."
         },
         {
           name: "Tooth Fillings (Pasta) & Pediatric Care",
+          image: "/services/fillings.jpg",
+          tag: "Pediatric & Restorative",
           desc: "Natural tooth-colored composite fillings and calm, kid-friendly pediatric checkups designed to build lifelong healthy habits."
         }
       ]
@@ -32,14 +38,20 @@ export default function Services({ setPage }) {
       items: [
         {
           name: "Orthodontic Braces",
+          image: "/services/braces.jpg",
+          tag: "Orthodontics",
           desc: "Customized braces and regular monthly adjustments to gently align teeth, correct bites, and craft balanced smiles."
         },
         {
           name: "Professional Teeth Whitening",
+          image: "/services/whitening.jpg",
+          tag: "Cosmetic Dentistry",
           desc: "Safe, clinically supervised whitening treatments that noticeably brighten tooth enamel without harsh sensitivity."
         },
         {
           name: "Custom Porcelain Veneers",
+          image: "/services/veneers.jpg",
+          tag: "Smile Makeover",
           desc: "Ultra-thin, natural-looking veneers designed to refine tooth shape, close small gaps, and revitalize worn smiles."
         }
       ]
@@ -51,14 +63,20 @@ export default function Services({ setPage }) {
       items: [
         {
           name: "Crowns, Bridges & Prosthodontics",
+          image: "/services/crowns.jpg",
+          tag: "Prosthodontics",
           desc: "Durable, finely crafted dental crowns and fixed bridges engineered to match natural teeth and restore chewing strength."
         },
         {
           name: "Root Canal Treatment (Endodontics)",
+          image: "/services/rootcanal.jpg",
+          tag: "Endodontics",
           desc: "Comfortable root canal therapy that eliminates deep tooth infection and preserves your natural tooth structure."
         },
         {
           name: "Extractions (Bunot) & Wisdom Tooth Removal",
+          image: "/services/extraction.jpg",
+          tag: "Oral Surgery",
           desc: "Safe routine extractions and impacted wisdom tooth surgery—backed by attentive post-procedure follow-up care."
         }
       ]
@@ -154,19 +172,35 @@ export default function Services({ setPage }) {
                   {category.items.map((item, itemIdx) => (
                     <div
                       key={itemIdx}
-                      className="bg-white p-8 rounded-2xl border border-brand-silver flex flex-col justify-between hover-lift shadow-sm"
+                      className="group bg-white rounded-2xl border border-brand-silver overflow-hidden flex flex-col justify-between hover-lift shadow-sm"
                     >
                       <div>
-                        <h3 className="text-lg font-bold text-brand-dark mb-3 flex items-center gap-2.5">
-                          <span className="w-1.5 h-6 bg-brand-gold rounded-full shrink-0"></span>
-                          {item.name}
-                        </h3>
-                        <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                          {item.desc}
-                        </p>
+                        {/* Visual Procedure Preview */}
+                        <div className="relative h-48 w-full bg-slate-900 overflow-hidden">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                          <span className="absolute bottom-3 left-4 bg-brand-dark/90 backdrop-blur-sm border border-brand-gold/40 text-brand-gold text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                            {item.tag}
+                          </span>
+                        </div>
+
+                        <div className="p-6 sm:p-7 pb-0">
+                          <h3 className="text-lg font-bold text-brand-dark mb-2.5 flex items-center gap-2.5">
+                            <span className="w-1.5 h-6 bg-brand-gold rounded-full shrink-0"></span>
+                            {item.name}
+                          </h3>
+                          <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                            {item.desc}
+                          </p>
+                        </div>
                       </div>
 
-                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <div className="px-6 sm:px-7 py-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
                         <span className="text-[11px] font-bold tracking-wide text-brand-slate uppercase flex items-center gap-1.5">
                           <ShieldCheck className="w-3.5 h-3.5 text-brand-accent" />
                           Honest Assessment
