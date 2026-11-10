@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone, Mail, MapPin, Clock, Heart } from 'lucide-react';
+import { Menu, X, Phone, MapPin, Clock, ExternalLink, Sparkles } from 'lucide-react';
+import { FacebookIcon, InstagramIcon } from './components/SocialIcons';
 import Home from './components/Home';
 import Services from './components/Services';
 import Contact from './components/Contact';
@@ -14,19 +15,14 @@ export default function App() {
     setMobileMenuOpen(false);
   }, [page]);
 
-  // Premium SVG Wing Crest Logo (replicated from Yeshu Meridian branding)
-  const Logo = ({ className = "w-8 h-8" }) => (
-    <svg
-      viewBox="0 0 400 300"
-      className={className}
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      {/* Left Wing */}
-      <path d="M 192 245 L 65 50 L 138 50 L 192 165 Z" />
-      {/* Right Wing */}
-      <path d="M 208 245 L 335 50 L 262 50 L 208 165 Z" />
-    </svg>
+  const BrandLogo = ({ size = "w-11 h-11" }) => (
+    <div className={`${size} rounded-xl bg-brand-dark border border-amber-500/30 p-1 flex items-center justify-center overflow-hidden shadow-sm shrink-0`}>
+      <img
+        src="/masterdent-logo.png"
+        alt="Masterdent Dental Center Logo"
+        className="w-full h-full object-contain"
+      />
+    </div>
   );
 
   return (
@@ -37,22 +33,38 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-brand-accent" />
-              45 Pearl Street, Meridian City
+              <MapPin className="w-3.5 h-3.5 text-brand-gold" />
+              CBD 2 Health & Wellness Strip, Joker Arroyo St., Brgy. Triangulo, Naga City
             </span>
             <span className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-brand-accent" />
-              Mon - Fri: 8:00 AM - 6:00 PM | Sat: 9:00 AM - 4:00 PM
+              <Clock className="w-3.5 h-3.5 text-brand-gold" />
+              Open Daily (Mon - Sun): 8:00 AM - 6:00 PM
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="mailto:shimrilu@gmail.com" className="hover:text-white transition-colors">
-              shimrilu@gmail.com
+            <a
+              href="https://www.facebook.com/MasterdentDentalCenter"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-brand-gold transition-colors inline-flex items-center gap-1"
+            >
+              <FacebookIcon className="w-3.5 h-3.5" />
+              Facebook
             </a>
-            <span className="text-slate-600">|</span>
-            <span className="text-emerald-400 flex items-center gap-1">
+            <span className="text-slate-700">|</span>
+            <a
+              href="https://www.instagram.com/masterdentdentalcenter"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-brand-gold transition-colors inline-flex items-center gap-1"
+            >
+              <InstagramIcon className="w-3.5 h-3.5" />
+              @masterdentdentalcenter
+            </a>
+            <span className="text-slate-700">|</span>
+            <span className="text-emerald-400 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              24/7 Dental Emergency Priority
+              Open 7 Days a Week
             </span>
           </div>
         </div>
@@ -68,15 +80,13 @@ export default function App() {
               onClick={() => setPage('home')}
               className="flex items-center gap-3 focus-visible:ring-brand-accent text-left group"
             >
-              <div className="text-brand-dark group-hover:text-brand-accent transition-colors">
-                <Logo className="w-9 h-9" />
-              </div>
+              <BrandLogo size="w-11 h-11" />
               <div>
-                <span className="text-lg font-black tracking-wider uppercase block text-brand-dark leading-none">
-                  Yeshu Dental
+                <span className="text-lg font-black tracking-wide block text-brand-dark leading-none group-hover:text-brand-accent transition-colors">
+                  Masterdent
                 </span>
-                <span className="text-[9px] font-bold text-brand-slate tracking-widest uppercase block mt-1">
-                  Meridian Smile Care
+                <span className="text-[10px] font-bold text-brand-slate tracking-[0.22em] uppercase block mt-1">
+                  Dental Center
                 </span>
               </div>
             </button>
@@ -93,7 +103,7 @@ export default function App() {
                 onClick={() => setPage('services')}
                 className={`py-2 border-b-2 hover:text-brand-dark transition-all ${page === 'services' ? 'border-brand-accent text-brand-dark' : 'border-transparent'}`}
               >
-                Services & Pricing
+                Services & Specialties
               </button>
               <button
                 onClick={() => setPage('contact')}
@@ -105,29 +115,29 @@ export default function App() {
 
             {/* Desktop Navigation Action CTAs */}
             <div className="hidden md:flex items-center gap-4">
-              <a 
-                href="tel:+639171234567"
+              <a
+                href="tel:+639171630134"
                 className="flex items-center gap-2 text-sm font-bold text-brand-dark hover:text-brand-accent transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-brand-light flex items-center justify-center text-brand-accent">
+                <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-brand-accent">
                   <Phone className="w-4 h-4" />
                 </div>
-                <span>+63 917 123 4567</span>
+                <span>0917 163 0134</span>
               </a>
               <button
                 onClick={() => setPage('contact')}
-                className="bg-brand-accent hover:bg-brand-accentHover text-white text-xs font-bold px-5 py-3 rounded-xl transition-all shadow-sm"
+                className="bg-brand-dark hover:bg-slate-800 text-brand-gold border border-brand-gold/40 text-xs font-bold px-5 py-3 rounded-xl transition-all shadow-sm"
               >
                 Book Appointment
               </button>
             </div>
 
-            {/* Mobile Hamburguer Menu Trigger */}
+            {/* Mobile Hamburger Menu Trigger */}
             <div className="flex md:hidden items-center gap-3">
-              <a 
-                href="tel:+639171234567"
+              <a
+                href="tel:+639171630134"
                 className="bg-brand-accent text-white p-3 rounded-xl shadow-md flex items-center justify-center"
-                aria-label="Call clinic directly"
+                aria-label="Call Masterdent Dental Center directly"
               >
                 <Phone className="w-5 h-5" />
               </a>
@@ -149,36 +159,36 @@ export default function App() {
             <nav className="flex flex-col gap-2">
               <button
                 onClick={() => setPage('home')}
-                className={`text-left font-bold py-3 px-4 rounded-xl text-base ${page === 'home' ? 'bg-brand-light text-brand-dark' : 'text-brand-slate'}`}
+                className={`text-left font-bold py-3 px-4 rounded-xl text-base ${page === 'home' ? 'bg-amber-50 text-brand-dark border border-amber-200' : 'text-brand-slate'}`}
               >
                 Home
               </button>
               <button
                 onClick={() => setPage('services')}
-                className={`text-left font-bold py-3 px-4 rounded-xl text-base ${page === 'services' ? 'bg-brand-light text-brand-dark' : 'text-brand-slate'}`}
+                className={`text-left font-bold py-3 px-4 rounded-xl text-base ${page === 'services' ? 'bg-amber-50 text-brand-dark border border-amber-200' : 'text-brand-slate'}`}
               >
-                Services & Pricing
+                Services & Specialties
               </button>
               <button
                 onClick={() => setPage('contact')}
-                className={`text-left font-bold py-3 px-4 rounded-xl text-base ${page === 'contact' ? 'bg-brand-light text-brand-dark' : 'text-brand-slate'}`}
+                className={`text-left font-bold py-3 px-4 rounded-xl text-base ${page === 'contact' ? 'bg-amber-50 text-brand-dark border border-amber-200' : 'text-brand-slate'}`}
               >
                 Contact & Location
               </button>
             </nav>
             <div className="border-t border-brand-silver pt-4 flex flex-col gap-3">
-              <a 
-                href="tel:+639171234567"
-                className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl text-sm"
+              <a
+                href="tel:+639171630134"
+                className="flex items-center justify-center gap-2 bg-brand-dark hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl text-sm"
               >
-                <Phone className="w-4 h-4 text-brand-accent" />
-                Call: +63 917 123 4567
+                <Phone className="w-4 h-4 text-brand-gold" />
+                Call / Text: 0917 163 0134
               </a>
               <button
                 onClick={() => setPage('contact')}
                 className="w-full bg-brand-accent hover:bg-brand-accentHover text-white font-bold py-3.5 rounded-xl text-sm shadow-md"
               >
-                Book Online Now
+                Book Appointment Now
               </button>
             </div>
           </div>
@@ -187,12 +197,12 @@ export default function App() {
 
       {/* Sticky Call Button Banner for Mobile Screens (CRO Focus) */}
       <div className="md:hidden fixed bottom-4 left-4 right-4 z-40">
-        <a 
-          href="tel:+639171234567"
-          className="flex items-center justify-center gap-3 bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-rose-950/20 border border-rose-500 animate-pulse-subtle"
+        <a
+          href="tel:+639171630134"
+          className="flex items-center justify-center gap-3 bg-brand-dark hover:bg-slate-900 text-brand-gold font-bold py-4 rounded-2xl shadow-xl shadow-black/30 border border-brand-gold/50 animate-pulse-subtle"
         >
-          <Phone className="w-5 h-5 animate-pulse text-white fill-white" />
-          Call Dentist Now: +63 917 123 4567
+          <Phone className="w-5 h-5 animate-pulse text-brand-gold" />
+          Call / Text Clinic: 0917 163 0134
         </a>
       </div>
 
@@ -204,59 +214,60 @@ export default function App() {
       </main>
 
       {/* Shared Global Footer */}
-      <footer className="brand-gradient-slate text-slate-350 border-t border-slate-800 py-16 text-sm">
+      <footer className="brand-gradient-slate text-slate-300 border-t border-slate-800 py-16 text-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
 
             {/* Logo/Identity Col (4 cols) */}
             <div className="lg:col-span-4 space-y-6">
               <div className="flex items-center gap-3 text-white">
-                <Logo className="w-10 h-10 text-brand-accent" />
+                <BrandLogo size="w-12 h-12" />
                 <div>
-                  <span className="text-xl font-black tracking-wider uppercase block leading-none">
-                    Yeshu Dental
+                  <span className="text-xl font-black tracking-wide block leading-none">
+                    Masterdent
                   </span>
-                  <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase block mt-1">
-                    Meridian Smile Care
+                  <span className="text-[10px] font-bold text-brand-gold tracking-[0.22em] uppercase block mt-1">
+                    Dental Center
                   </span>
                 </div>
               </div>
               <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
-                Providing standard-setting dental clinical care, cosmetic makeovers, and same-day dental emergency services in Meridian City. Your dental health and absolute comfort are our primary concerns.
+                <strong className="text-slate-200">Quality Dental Care For Every Smile.</strong> Serving Naga City & Camarines Sur with comprehensive general, cosmetic, pediatric, orthodontic, prosthodontic, endodontic, and oral surgery care—open 7 days a week.
               </p>
-              <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/60 p-3 rounded-xl text-[11px] text-slate-300 max-w-xs">
-                <Heart className="w-4 h-4 text-brand-accent fill-brand-accent shrink-0" />
-                <span>Dr. Shimri Gabriel Luansing, Lead Clinician</span>
+              <div className="flex items-center gap-2 bg-slate-900/80 border border-amber-500/20 p-3 rounded-xl text-[11px] text-slate-300 max-w-xs">
+                <Sparkles className="w-4 h-4 text-brand-gold shrink-0" />
+                <span>Gentle Care • Honest Consults • Attentive Aftercare</span>
               </div>
             </div>
 
             {/* Quick Links Col (2 cols) */}
             <div className="lg:col-span-2 space-y-4">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Quick Navigation</h4>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Quick Links</h4>
               <ul className="space-y-2.5 text-xs text-slate-400">
                 <li>
-                  <button onClick={() => setPage('home')} className="hover:text-white transition-colors">
-                    Home Landing
+                  <button onClick={() => setPage('home')} className="hover:text-brand-gold transition-colors">
+                    Home
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setPage('services')} className="hover:text-white transition-colors">
-                    Clinical Services
+                  <button onClick={() => setPage('services')} className="hover:text-brand-gold transition-colors">
+                    Dental Specialties
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setPage('contact')} className="hover:text-white transition-colors">
-                    Request Appointment
+                  <button onClick={() => setPage('contact')} className="hover:text-brand-gold transition-colors">
+                    Book Appointment
                   </button>
                 </li>
                 <li>
                   <a
-                    href="https://facebook.com/ShimriLuansing"
+                    href="https://mydmdapp.com/c/masterdent"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-brand-gold transition-colors inline-flex items-center gap-1"
                   >
-                    Follow on Facebook
+                    MyDMD Portal
+                    <ExternalLink className="w-3 h-3" />
                   </a>
                 </li>
               </ul>
@@ -264,25 +275,38 @@ export default function App() {
 
             {/* Clinic Details / Local SEO NAP Col (3 cols) */}
             <div className="lg:col-span-3 space-y-4">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Yeshu Dental Office</h4>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Naga City Clinic</h4>
               <ul className="space-y-3.5 text-xs text-slate-400">
                 <li className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-brand-accent shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
                   <span>
-                    Meridian Dental Center, 45 Pearl Street,<br />
-                    Meridian City, Metro Manila, 1600
+                    Cluster A, The CBD 2 Health and Wellness Strip, Joker Arroyo St. (Crescenciana Anciano St.), CBD II, Brgy. Triangulo, Naga City, 4400
                   </span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-brand-accent shrink-0" />
-                  <a href="tel:+639171234567" className="hover:text-white font-bold">
-                    +63 917 123 4567
+                  <Phone className="w-4 h-4 text-brand-gold shrink-0" />
+                  <a href="tel:+639171630134" className="hover:text-brand-gold font-bold text-slate-200">
+                    +63 917 163 0134
                   </a>
                 </li>
-                <li className="flex items-center gap-2.5">
-                  <Mail className="w-4 h-4 text-brand-accent shrink-0" />
-                  <a href="mailto:shimrilu@gmail.com" className="hover:text-white break-all">
-                    shimrilu@gmail.com
+                <li className="flex items-center gap-3 pt-1">
+                  <a
+                    href="https://www.facebook.com/MasterdentDentalCenter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-800 hover:border-brand-gold/50 px-3 py-1.5 rounded-lg text-slate-300 hover:text-brand-gold transition-colors"
+                  >
+                    <FacebookIcon className="w-3.5 h-3.5" />
+                    Facebook
+                  </a>
+                  <a
+                    href="https://www.instagram.com/masterdentdentalcenter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-800 hover:border-brand-gold/50 px-3 py-1.5 rounded-lg text-slate-300 hover:text-brand-gold transition-colors"
+                  >
+                    <InstagramIcon className="w-3.5 h-3.5" />
+                    Instagram
                   </a>
                 </li>
               </ul>
@@ -290,26 +314,26 @@ export default function App() {
 
             {/* Office Hours Col (3 cols) */}
             <div className="lg:col-span-3 space-y-4">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Office Hours</h4>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Clinic Hours</h4>
               <ul className="space-y-2 text-xs text-slate-400">
                 <li className="flex justify-between">
-                  <span>Mon - Fri</span>
+                  <span>Monday – Friday</span>
                   <span className="font-semibold text-slate-200">8:00 AM - 6:00 PM</span>
                 </li>
                 <li className="flex justify-between">
                   <span>Saturday</span>
-                  <span className="font-semibold text-slate-200">9:00 AM - 4:00 PM</span>
+                  <span className="font-semibold text-slate-200">8:00 AM - 6:00 PM</span>
                 </li>
                 <li className="flex justify-between">
                   <span>Sunday</span>
-                  <span className="text-slate-500">Closed</span>
+                  <span className="font-semibold text-brand-gold">8:00 AM - 6:00 PM</span>
                 </li>
                 <li className="border-t border-slate-800/80 pt-3 mt-3">
-                  <span className="text-[10px] font-bold text-rose-400 block uppercase tracking-wider">
-                    Emergency Treatment Hours
+                  <span className="text-[10px] font-bold text-brand-gold block uppercase tracking-wider">
+                    Accepted Payments
                   </span>
                   <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                    Emergency dental lines are answered 24/7. Call us for instructions if you have severe dental pain.
+                    Cash, GCash, QR Ph, BDO, Visa, Mastercard & JCB accepted.
                   </p>
                 </li>
               </ul>
@@ -319,13 +343,9 @@ export default function App() {
 
           {/* Bottom Copyright Ribbon */}
           <div className="border-t border-slate-800/80 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-            <p>© {new Date().getFullYear()} Yeshu Dental. All rights reserved. Registered Dental Practitioner.</p>
+            <p>© {new Date().getFullYear()} Masterdent Dental Center — Naga City, Camarines Sur. All rights reserved.</p>
             <div className="flex gap-4">
-              <span className="hover:text-slate-400 cursor-pointer">Privacy Policy</span>
-              <span>•</span>
-              <span className="hover:text-slate-400 cursor-pointer">HIPAA Statement</span>
-              <span>•</span>
-              <span className="hover:text-slate-400 cursor-pointer">Terms of Service</span>
+              <span className="hover:text-slate-300 cursor-pointer">Quality Dental Care For Every Smile</span>
             </div>
           </div>
         </div>

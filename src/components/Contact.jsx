@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
-  Phone, Mail, MapPin, Clock, ShieldCheck,
-  CheckCircle2, AlertCircle, Info, Navigation, Car
+  Phone, MapPin, Clock, ShieldCheck, CheckCircle2,
+  AlertCircle, Info, Navigation, ExternalLink, CreditCard
 } from 'lucide-react';
+import { FacebookIcon, InstagramIcon } from './SocialIcons';
 import OfficeLocationPanel from './OfficeLocationPanel';
 
 export default function Contact() {
@@ -11,6 +12,7 @@ export default function Contact() {
     name: '',
     phone: '',
     email: '',
+    patientType: 'New Patient',
     date: '',
     time: '',
     reason: '',
@@ -30,13 +32,12 @@ export default function Contact() {
       ...prev,
       [name]: value
     }));
-    // Clear errors when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
-  // Basic Form Validation
+  // Form Validation
   const validateForm = () => {
     const newErrors = {};
 
@@ -46,17 +47,15 @@ export default function Contact() {
       newErrors.name = "Full Name cannot exceed 50 characters.";
     }
 
-    // Regular expression for basic phone validation
     const phoneRegex = /^[+]?[0-9\s-]{7,15}$/;
     if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required.";
+      newErrors.phone = "Mobile number is required.";
     } else if (!phoneRegex.test(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number.";
+      newErrors.phone = "Please enter a valid mobile number (e.g. 0917 163 0134).";
     } else if (formData.phone.length > 20) {
-      newErrors.phone = "Phone number cannot exceed 20 characters.";
+      newErrors.phone = "Mobile number cannot exceed 20 characters.";
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = "Email address is required.";
@@ -96,16 +95,14 @@ export default function Contact() {
     if (validateForm()) {
       setIsSubmitting(true);
 
-      // Generate random booking reference for realism
-      const refId = "YSD-" + Math.floor(100000 + Math.random() * 900000);
+      // Generate Masterdent booking reference
+      const refId = "MDC-" + Math.floor(100000 + Math.random() * 900000);
       setBookingId(refId);
 
-      // Fetch the Google Sheets Web App deployment URL from environments
       const webAppUrl = (import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL || "").trim();
 
       if (webAppUrl) {
         try {
-          // Send request. mode: 'no-cors' resolves the redirects that Google Apps Script performs.
           await fetch(webAppUrl, {
             method: 'POST',
             mode: 'no-cors',
@@ -119,18 +116,14 @@ export default function Contact() {
           });
         } catch (error) {
           console.error("Failed to write to Google Sheet:", error);
-          // Fail-safe: log errors but still allow the UI to transition so patient knows we have them
         }
       } else {
-        // Mock network latency when not configured
         console.log("No Google Sheet Web App URL configured. Data logged:", { ...formData, bookingId: refId });
         await new Promise(resolve => setTimeout(resolve, 800));
       }
 
       setIsSubmitting(false);
       setIsSubmitted(true);
-
-      // Scroll to top of section on submit
       window.scrollTo({ top: 200, behavior: 'smooth' });
     }
   };
@@ -140,21 +133,23 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Page Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">
+            Masterdent Dental Center • Naga City
+          </p>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-brand-dark mb-4">
-            Schedule an Appointment
+            Book Your Dental Appointment
           </h1>
           <p className="text-slate-500 font-light">
-            Take the first step toward a beautiful, healthy smile. Request an appointment below or call our office directly.
+            Open Monday to Sunday (8:00 AM – 6:00 PM) at CBD 2 Health & Wellness Strip, Brgy. Triangulo. Request a schedule below or call/text us directly at <strong className="text-brand-dark">0917 163 0134</strong>.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8 items-start">
 
-          {/* Left Column: Form (8 Cols) */}
+          {/* Left Column: Appointment Request Form (7 Cols) */}
           <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-brand-silver shadow-sm">
 
-            {/* If Form is successfully submitted */}
             {isSubmitted ? (
               <div className="text-center py-8 space-y-6 animate-slide-up">
                 <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto text-emerald-500">
@@ -162,9 +157,9 @@ export default function Contact() {
                 </div>
 
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-extrabold text-brand-dark">Request Received Successfully!</h2>
+                  <h2 className="text-2xl font-extrabold text-brand-dark">Appointment Request Received!</h2>
                   <p className="text-sm text-slate-500 max-w-md mx-auto">
-                    Thank you, <span className="font-bold text-brand-dark">{formData.name}</span>. Your preliminary appointment request has been securely transmitted.
+                    Thank you, <span className="font-bold text-brand-dark">{formData.name}</span>. Your booking request for Masterdent Dental Center has been submitted.
                   </p>
                 </div>
 
@@ -183,41 +178,55 @@ export default function Contact() {
                       <p className="text-xs text-slate-400">Preferred Time</p>
                       <p className="font-semibold text-brand-dark">{formData.time}</p>
                     </div>
-                    <div className="col-span-2">
-                      <p className="text-xs text-slate-400">Reason for Visit</p>
+                    <div>
+                      <p className="text-xs text-slate-400">Patient Status</p>
+                      <p className="font-semibold text-brand-dark">{formData.patientType}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400">Reason</p>
                       <p className="font-semibold text-brand-dark">{formData.reason}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-4 text-xs text-emerald-800 flex items-start gap-3 max-w-md mx-auto text-left">
-                  <Info className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
+                <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 flex items-start gap-3 max-w-md mx-auto text-left">
+                  <Info className="w-4 h-4 shrink-0 mt-0.5 text-brand-accent" />
                   <p>
-                    <strong>What happens next?</strong> Our patient coordinator will contact you at <strong>{formData.phone}</strong> or <strong>{formData.email}</strong> within 2 business hours to confirm your exact appointment slot and review insurance details.
+                    <strong>What happens next?</strong> Our front desk team will reach out via SMS or call at <strong>{formData.phone}</strong> to confirm your exact chair slot. Need urgent help? Text/call <strong>0917 163 0134</strong>.
                   </p>
                 </div>
 
                 <button
                   onClick={() => {
                     setIsSubmitted(false);
-                    setFormData({ name: '', phone: '', email: '', date: '', time: '', reason: '', notes: '' });
+                    setFormData({ name: '', phone: '', email: '', patientType: 'New Patient', date: '', time: '', reason: '', notes: '' });
                   }}
-                  className="bg-brand-dark hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition-all text-sm"
+                  className="bg-brand-dark hover:bg-slate-800 text-brand-gold font-bold px-6 py-3 rounded-xl transition-all text-sm"
                 >
                   Submit Another Request
                 </button>
               </div>
             ) : (
-              // Active Form UI
               <form onSubmit={handleSubmit} className="space-y-6">
 
-                {/* Form header/encryption message */}
-                <div className="flex items-center gap-3 bg-slate-50 border border-slate-200/60 rounded-xl p-4 text-xs text-slate-500">
-                  <ShieldCheck className="w-5 h-5 text-brand-accent shrink-0" />
-                  <div>
-                    <span className="font-bold text-brand-dark block">HIPAA Compliant & Secure</span>
-                    Your personal health details are fully encrypted and transmitted securely.
+                {/* MyDMD / Privacy Header Banner */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 border border-slate-200/80 rounded-xl p-4 text-xs text-slate-600">
+                  <div className="flex items-center gap-3">
+                    <ShieldCheck className="w-5 h-5 text-brand-accent shrink-0" />
+                    <div>
+                      <span className="font-bold text-brand-dark block">Fast Clinic Scheduling</span>
+                      Confidential patient intake • Open 7 days a week
+                    </div>
                   </div>
+                  <a
+                    href="https://mydmdapp.com/c/masterdent"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-brand-accent hover:text-brand-accentHover font-bold whitespace-nowrap"
+                  >
+                    MyDMD Portal
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -233,8 +242,8 @@ export default function Contact() {
                       maxLength={50}
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="e.g. John Doe"
-                      className={`w-full bg-slate-50 border ${errors.name ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
+                      placeholder="e.g. Juan Dela Cruz"
+                      className={`w-full bg-slate-50 border ${errors.name ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-amber-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
                     />
                     {errors.name && (
                       <p className="text-xs text-rose-500 flex items-center gap-1">
@@ -244,10 +253,10 @@ export default function Contact() {
                     )}
                   </div>
 
-                  {/* Phone Number */}
+                  {/* Mobile Number */}
                   <div className="space-y-2">
                     <label htmlFor="phone" className="block text-xs font-bold text-brand-dark uppercase tracking-wider">
-                      Mobile Phone Number *
+                      Mobile Number *
                     </label>
                     <input
                       type="tel"
@@ -256,8 +265,8 @@ export default function Contact() {
                       maxLength={20}
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="e.g. +63 917 123 4567"
-                      className={`w-full bg-slate-50 border ${errors.phone ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
+                      placeholder="e.g. 0917 163 0134"
+                      className={`w-full bg-slate-50 border ${errors.phone ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-amber-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
                     />
                     {errors.phone && (
                       <p className="text-xs text-rose-500 flex items-center gap-1">
@@ -268,7 +277,7 @@ export default function Contact() {
                   </div>
 
                   {/* Email Address */}
-                  <div className="space-y-2 sm:col-span-2">
+                  <div className="space-y-2">
                     <label htmlFor="email" className="block text-xs font-bold text-brand-dark uppercase tracking-wider">
                       Email Address *
                     </label>
@@ -279,8 +288,8 @@ export default function Contact() {
                       maxLength={80}
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="e.g. johndoe@gmail.com"
-                      className={`w-full bg-slate-50 border ${errors.email ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
+                      placeholder="e.g. you@gmail.com"
+                      className={`w-full bg-slate-50 border ${errors.email ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-amber-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
                     />
                     {errors.email && (
                       <p className="text-xs text-rose-500 flex items-center gap-1">
@@ -288,6 +297,23 @@ export default function Contact() {
                         {errors.email}
                       </p>
                     )}
+                  </div>
+
+                  {/* Patient Type */}
+                  <div className="space-y-2">
+                    <label htmlFor="patientType" className="block text-xs font-bold text-brand-dark uppercase tracking-wider">
+                      Patient Status
+                    </label>
+                    <select
+                      id="patientType"
+                      name="patientType"
+                      value={formData.patientType}
+                      onChange={handleChange}
+                      className="w-full bg-slate-50 border border-brand-silver rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white focus:ring-amber-100"
+                    >
+                      <option value="New Patient">New Patient</option>
+                      <option value="Existing Patient">Existing / Returning Patient</option>
+                    </select>
                   </div>
 
                   {/* Preferred Date */}
@@ -302,7 +328,7 @@ export default function Contact() {
                       min={new Date().toISOString().split('T')[0]}
                       value={formData.date}
                       onChange={handleChange}
-                      className={`w-full bg-slate-50 border ${errors.date ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
+                      className={`w-full bg-slate-50 border ${errors.date ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-amber-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
                     />
                     {errors.date && (
                       <p className="text-xs text-rose-500 flex items-center gap-1">
@@ -322,15 +348,13 @@ export default function Contact() {
                       name="time"
                       value={formData.time}
                       onChange={handleChange}
-                      className={`w-full bg-slate-50 border ${errors.time ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
+                      className={`w-full bg-slate-50 border ${errors.time ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-amber-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
                     >
                       <option value="">Select a time...</option>
-                      {/* Morning slots */}
                       <option value="8:00 AM - 9:00 AM">8:00 AM - 9:00 AM</option>
                       <option value="9:00 AM - 10:00 AM">9:00 AM - 10:00 AM</option>
                       <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
                       <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
-                      {/* Lunch gap */}
                       <option value="1:00 PM - 2:00 PM">1:00 PM - 2:00 PM</option>
                       <option value="2:00 PM - 3:00 PM">2:00 PM - 3:00 PM</option>
                       <option value="3:00 PM - 4:00 PM">3:00 PM - 4:00 PM</option>
@@ -355,15 +379,18 @@ export default function Contact() {
                       name="reason"
                       value={formData.reason}
                       onChange={handleChange}
-                      className={`w-full bg-slate-50 border ${errors.reason ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
+                      className={`w-full bg-slate-50 border ${errors.reason ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-amber-100'} rounded-xl px-4 py-3 text-sm transition-all focus:border-brand-accent focus:bg-white`}
                     >
-                      <option value="">Select visit reason...</option>
-                      <option value="Routine Cleaning & Exam">Routine Cleaning & Exam</option>
-                      <option value="Emergency Care / Pain Relief">Emergency Care / Pain Relief</option>
-                      <option value="Cosmetic Whitening / Veneers">Cosmetic Whitening / Veneers</option>
-                      <option value="Restoration (Crown / Filling / Bridge)">Restoration (Crown / Filling / Bridge)</option>
-                      <option value="Dental Implants Consultation">Dental Implants Consultation</option>
-                      <option value="Other Dental Issue">Other Dental Issue</option>
+                      <option value="">Select dental service...</option>
+                      <option value="Dental Checkup & Consultation">Dental Checkup & Consultation</option>
+                      <option value="Dental Cleaning (Oral Prophylaxis)">Dental Cleaning (Oral Prophylaxis)</option>
+                      <option value="Dental Pain / Urgent Relief">Dental Pain / Urgent Relief</option>
+                      <option value="Tooth Filling (Pasta)">Tooth Filling (Pasta)</option>
+                      <option value="Tooth Extraction (Bunot) / Wisdom Tooth Removal">Tooth Extraction (Bunot) / Wisdom Tooth Removal</option>
+                      <option value="Orthodontic Braces / Adjustment">Orthodontic Braces / Adjustment</option>
+                      <option value="Root Canal / Crowns / Bridges / Veneers">Root Canal / Crowns / Bridges / Veneers</option>
+                      <option value="Teeth Whitening / Cosmetic Dentistry">Teeth Whitening / Cosmetic Dentistry</option>
+                      <option value="Pediatric Dental Visit">Pediatric Dental Visit</option>
                     </select>
                     {errors.reason && (
                       <p className="text-xs text-rose-500 flex items-center gap-1">
@@ -377,7 +404,7 @@ export default function Contact() {
                   <div className="space-y-2 sm:col-span-2">
                     <div className="flex justify-between items-center">
                       <label htmlFor="notes" className="block text-xs font-bold text-brand-dark uppercase tracking-wider">
-                        Symptoms or Additional Notes (Optional)
+                        Symptoms or Notes (Optional)
                       </label>
                       {errors.notes && (
                         <span className="text-xs text-rose-500 flex items-center gap-1">
@@ -393,11 +420,11 @@ export default function Contact() {
                       maxLength={500}
                       value={formData.notes}
                       onChange={handleChange}
-                      placeholder="Tell us if you have pain, specific fears, or questions..."
-                      className={`w-full bg-slate-50 border ${errors.notes ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-teal-100'} rounded-xl px-4 py-3 text-sm focus:ring-teal-100 focus:border-brand-accent focus:bg-white transition-all resize-none`}
+                      placeholder="Describe any tooth pain, swelling, preferred dentist, or questions..."
+                      className={`w-full bg-slate-50 border ${errors.notes ? 'border-rose-400 focus:ring-rose-200' : 'border-brand-silver focus:ring-amber-100'} rounded-xl px-4 py-3 text-sm focus:border-brand-accent focus:bg-white transition-all resize-none`}
                     ></textarea>
                     <div className="flex justify-between text-[10px] text-slate-400 px-1">
-                      <span>Describe your symptoms briefly (e.g. pain level, tooth position)</span>
+                      <span>Briefly note symptoms or preferred schedule</span>
                       <span>{formData.notes ? formData.notes.length : 0} / 500 characters</span>
                     </div>
                   </div>
@@ -407,130 +434,128 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full bg-brand-accent hover:bg-brand-accentHover text-white text-base font-bold py-4 rounded-xl shadow-lg shadow-brand-accent/20 hover:shadow-brand-accent/35 transition-all duration-200 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    className={`w-full bg-brand-dark hover:bg-slate-800 text-brand-gold border border-brand-gold/40 text-base font-extrabold py-4 rounded-xl shadow-lg transition-all duration-200 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
                   >
-                    {isSubmitting ? 'Sending Secure Request...' : 'Securely Request Appointment'}
+                    {isSubmitting ? 'Sending Request...' : 'Request Appointment at Masterdent'}
                   </button>
                   <p className="text-center text-[10px] text-slate-400 mt-3">
-                    By submitting, you agree to receive follow-up contact calls or text messages regarding your clinical booking.
+                    Our clinic team will confirm your exact appointment slot via SMS or call.
                   </p>
                 </div>
               </form>
             )}
           </div>
 
-          {/* Right Column: Contact Details & Map (5 Cols) */}
-          <div className="lg:col-span-5 space-y-8">
+          {/* Right Column: Contact Details, Hours & Payments (5 Cols) */}
+          <div className="lg:col-span-5 space-y-6">
 
-            {/* NAP (Name, Address, Phone) & Contact Info Box */}
+            {/* NAP & Contact Info Box */}
             <div className="bg-brand-dark text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-lg space-y-6">
               <div>
-                <span className="text-[10px] font-extrabold tracking-widest text-brand-accent uppercase">
-                  Contact Information
+                <span className="text-[10px] font-extrabold tracking-widest text-brand-gold uppercase">
+                  Clinic Information
                 </span>
-                <h2 className="text-2xl font-extrabold mt-1">Yeshu Dental Clinic</h2>
+                <h2 className="text-2xl font-extrabold mt-1">Masterdent Dental Center</h2>
               </div>
 
               <div className="space-y-4">
-                {/* Address Link */}
                 <a
-                  href="https://maps.google.com/?q=Meridian+Dental+Center+45+Pearl+Street+Meridian+City"
+                  href="https://www.google.com/maps/search/?api=1&query=13.6213128,123.1949730"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800 transition-colors group"
+                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800/80 transition-colors group"
                 >
-                  <MapPin className="w-5 h-5 text-brand-accent shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-brand-gold shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-xs text-slate-400 block font-semibold">Our Location</span>
-                    <span className="text-sm font-medium leading-relaxed group-hover:text-teal-300">
-                      Meridian Dental Center, 45 Pearl Street,<br />
-                      Meridian City, Metro Manila, 1600
+                    <span className="text-xs text-slate-400 block font-semibold">Naga City Location</span>
+                    <span className="text-sm font-medium leading-relaxed group-hover:text-brand-gold">
+                      Cluster A, The CBD 2 Health & Wellness Strip,<br />
+                      Joker Arroyo St. (Crescenciana Anciano St.),<br />
+                      CBD II, Brgy. Triangulo, Naga City, 4400
+                    </span>
+                    <span className="text-xs text-amber-300 block mt-1">
+                      In front of BCDC • Near SM City Naga
                     </span>
                   </div>
                 </a>
 
-                {/* Click-to-Call Link */}
-                <a 
-                  href="tel:+639171234567" 
-                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800 transition-colors group"
+                <a
+                  href="tel:+639171630134"
+                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800/80 transition-colors group"
                 >
-                  <Phone className="w-5 h-5 text-brand-accent shrink-0 mt-0.5" />
+                  <Phone className="w-5 h-5 text-brand-gold shrink-0 mt-0.5" />
                   <div>
                     <span className="text-xs text-slate-400 block font-semibold">Call / Text Direct</span>
-                    <span className="text-sm font-bold group-hover:text-teal-300">
-                      +63 917 123 4567
+                    <span className="text-sm font-bold group-hover:text-brand-gold">
+                      +63 917 163 0134 (0917 163 0134)
                     </span>
                   </div>
                 </a>
 
-                {/* Click-to-Email Link */}
-                <a 
-                  href="mailto:shimrilu@gmail.com" 
-                  className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800 transition-colors group"
-                >
-                  <Mail className="w-5 h-5 text-brand-accent shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-xs text-slate-400 block font-semibold">Email Patient Support</span>
-                    <span className="text-sm font-medium group-hover:text-teal-300 break-all">
-                      shimrilu@gmail.com
-                    </span>
-                  </div>
-                </a>
+                <div className="flex flex-wrap gap-2.5 px-3 pt-1">
+                  <a
+                    href="https://www.facebook.com/MasterdentDentalCenter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-700 hover:border-brand-gold/60 text-xs font-semibold px-3.5 py-2 rounded-xl text-slate-200 hover:text-brand-gold transition-colors"
+                  >
+                    <FacebookIcon className="w-3.5 h-3.5" />
+                    Facebook Page
+                  </a>
+                  <a
+                    href="https://www.instagram.com/masterdentdentalcenter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-700 hover:border-brand-gold/60 text-xs font-semibold px-3.5 py-2 rounded-xl text-slate-200 hover:text-brand-gold transition-colors"
+                  >
+                    <InstagramIcon className="w-3.5 h-3.5" />
+                    Instagram
+                  </a>
+                </div>
               </div>
             </div>
 
-            {/* Business Hours Table Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-silver shadow-sm space-y-6">
-              <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-brand-accent" />
-                <h3 className="text-lg font-bold text-brand-dark">Clinical Hours</h3>
+            {/* Clinic Hours Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-silver shadow-sm space-y-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-brand-accent" />
+                  <h3 className="text-lg font-bold text-brand-dark">Clinic Hours</h3>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full">
+                  Open 7 Days
+                </span>
               </div>
 
               <div className="divide-y divide-brand-silver/50 text-sm">
                 {[
-                  { days: "Monday - Friday", hours: "8:00 AM - 6:00 PM" },
-                  { days: "Saturday", hours: "9:00 AM - 4:00 PM" },
-                  { days: "Sunday", hours: "Closed", highlight: true },
+                  { days: "Monday – Friday", hours: "8:00 AM - 6:00 PM" },
+                  { days: "Saturday", hours: "8:00 AM - 6:00 PM" },
+                  { days: "Sunday", hours: "8:00 AM - 6:00 PM" },
                 ].map((row, idx) => (
                   <div key={idx} className="flex justify-between py-3">
                     <span className="font-semibold text-brand-dark">{row.days}</span>
-                    <span className={row.highlight ? 'text-slate-400 font-medium' : 'text-slate-600 font-bold'}>
-                      {row.hours}
-                    </span>
+                    <span className="text-slate-600 font-bold">{row.hours}</span>
                   </div>
                 ))}
               </div>
-
-              {/* Urgent Emergency highlight */}
-              <div className="bg-rose-50 border border-rose-100 rounded-2xl p-4 space-y-2">
-                <p className="text-xs font-bold text-rose-700 uppercase tracking-wide flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
-                  24/7 Pain Relief Coverage
-                </p>
-                <p className="text-xs text-rose-600 leading-relaxed">
-                  We answer urgent patient queries 24/7. Registered active patients receive priority callbacks for emergency consults.
-                </p>
-              </div>
             </div>
 
-            {/* Arrival & Parking Details Card */}
+            {/* Landmarks & Accepted Payments Card */}
             <div className="bg-white rounded-3xl p-6 border border-brand-silver shadow-sm space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Car className="w-5 h-5 text-brand-accent" />
-                  <h4 className="text-sm font-bold text-brand-dark">Arrival & Parking</h4>
+                  <CreditCard className="w-5 h-5 text-brand-accent" />
+                  <h4 className="text-sm font-bold text-brand-dark">Payments & Landmarks</h4>
                 </div>
-                <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-full border border-emerald-200">
-                  Free Reserved Parking
-                </span>
               </div>
 
               <div className="text-xs text-slate-500 space-y-2 leading-relaxed">
                 <p>
-                  Reserved patient parking is located right in front of the clinic. Underground parking is available in <strong>Slots 12 to 20</strong>.
+                  <strong>Accepted Payments:</strong> Cash, GCash, QR Ph, BDO, Visa, Mastercard, and JCB.
                 </p>
                 <p>
-                  Ground floor accessibility with full wheelchair ramps and step-free clinic access.
+                  <strong>Easy Landmarks:</strong> Situated right in front of <strong>BCDC</strong> along Joker Arroyo St. (Crescenciana Anciano St.), minutes from <strong>SM City Naga</strong> and <strong>Plaza Medica</strong>.
                 </p>
               </div>
 
@@ -539,7 +564,7 @@ export default function Contact() {
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-accent hover:text-brand-accentHover pt-1"
               >
                 <Navigation className="w-3.5 h-3.5" />
-                View Interactive Map Below &darr;
+                View Live Map & Landmark Guide &darr;
               </a>
             </div>
 
@@ -547,14 +572,14 @@ export default function Contact() {
 
         </div>
 
-        {/* Full-Width Interactive Google Map & Office Details Showcase (Matching Reference Panel) */}
+        {/* Full-Width Interactive Google Map & Office Details Showcase */}
         <div id="office-map" className="mt-16 pt-4">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark">
-              Visit Our Clinic
+              Visit Masterdent in Naga City
             </h2>
             <p className="text-slate-500 text-sm mt-1">
-              Conveniently located with easy highway access and reserved patient parking.
+              Toggle between the live Google Map pin and our CBD II street landmark guide.
             </p>
           </div>
           <OfficeLocationPanel />

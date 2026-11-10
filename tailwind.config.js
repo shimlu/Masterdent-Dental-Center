@@ -8,15 +8,15 @@ export default {
     extend: {
       colors: {
         brand: {
-          light: '#f8fafc',      // Silver / Warm white slate
-          silver: '#e2e8f0',     // Premium silver border/bg
-          slate: '#475569',      // Slate gray text
-          dark: '#0f172a',       // Deep navy-slate (footer, hero)
-          cardDark: '#1e293b',   // Mid navy-slate for cards
-          accent: '#0d9488',     // Trusting soft teal for main CTAs
-          accentHover: '#0f766e',// Darker teal on hover
-          gold: '#f59e0b',       // Warm accent (5-star ratings, emergency highlights)
-          goldHover: '#d97706',
+          light: '#f8fafc',       // Crisp clean clinic background
+          silver: '#e2e8f0',      // Subtle silver border/divider
+          slate: '#475569',       // Slate gray secondary text
+          dark: '#0a0c10',        // Masterdent obsidian black
+          cardDark: '#141820',    // Rich charcoal card surface
+          accent: '#d97706',      // Masterdent warm amber-gold CTA
+          accentHover: '#b45309', // Deeper amber-gold on hover
+          gold: '#eab308',        // Signature Masterdent gold highlight
+          goldHover: '#ca8a04',
         }
       },
       fontFamily: {
